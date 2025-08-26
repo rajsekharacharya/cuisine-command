@@ -1,0 +1,174 @@
+<!-- user-detail.html -->
+<div class="body-area">
+  <!-- Body Header -->
+  <div class="body-area-header">
+    <div class="body-header-title">
+      <span class="icon-common icon-user icon-breadcrumb"></span>
+      Profile Details
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="body-area-content">
+    <div class="form-container">
+      <!-- Profile Picture and Basic Info -->
+      <div class="row mb-4 profile-header">
+        <div class="col-md-3 text-center">
+          <div class="icon-toolbar-container icon-toolbar-lg mb-3 profile-avatar">
+            <img [src]="userProfile.photoUrl || '/assets/default-profile.jpg'" alt="Profile Picture" class="img-fluid rounded-circle">
+            <span class="icon-active" *ngIf="userProfile.isOnline"></span>
+          </div>
+          <label class="btn btn-primary btn-sm" *ngIf="isContactEditMode">
+            <input type="file" (change)="uploadProfilePhoto($event)" hidden>
+            Upload Photo
+          </label>
+        </div>
+        <div class="col-md-9 d-flex align-items-center">
+          <div class="profile-info">
+            <h2 class="body-header-title title-primary">{{ userProfile.name || 'User Name' }}</h2>
+            <p class="profile-role">{{ userProfile.role || 'User Role' }}</p>
+            <p class="lbl-date-time">Last Login: {{ userProfile.lastLogin | date: 'medium' }}</p>
+          </div>
+          <button class="btn-header-action btn-add ms-auto" (click)="toggleContactEditMode()">
+            <span class="icon-common icon-edit icon-add"></span>
+            {{ isContactEditMode ? 'Cancel' : 'Update Contact' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Contact Details Form -->
+      <form [formGroup]="contactForm" (ngSubmit)="saveContact()">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">Full Name</span>
+              </label>
+              <input type="text" class="form-control" formControlName="name" [readonly]="!isContactEditMode" placeholder="Enter full name">
+              <div *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched" class="text-danger">
+                Full name is required and must be at least 2 characters.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">Email Address</span>
+              </label>
+              <input type="email" class="form-control" formControlName="email" [readonly]="!isContactEditMode" placeholder="Enter email">
+              <div *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="text-danger">
+                Valid email is required.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">Phone Number</span>
+              </label>
+              <input type="tel" class="form-control" formControlName="phone" [readonly]="!isContactEditMode" placeholder="Enter phone number">
+              <div *ngIf="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched" class="text-danger">
+                Valid phone number is required (10-15 digits).
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">Date of Birth</span>
+              </label>
+              <input type="date" class="form-control" formControlName="dob" [readonly]="!isContactEditMode">
+            </div>
+
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">Address</span>
+              </label>
+              <textarea class="form-control" formControlName="address" [readonly]="!isContactEditMode" rows="3" placeholder="Enter address"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form Footer -->
+        <div class="form-footer" *ngIf="isContactEditMode">
+          <button type="submit" class="btn-form-action btn-primary" [disabled]="!contactForm.valid || savingContact">Save Contact</button>
+          <button type="button" class="btn-form-action btn-secondary" (click)="toggleContactEditMode()">Cancel</button>
+        </div>
+      </form>
+
+      <!-- Password Update Section -->
+      <div class="divider-horizontal"></div>
+      <div class="row mb-4">
+        <div class="col-md-12 d-flex align-items-center">
+          <h3 class="body-header-title mb-0">Password Details</h3>
+          <button class="btn-header-action btn-add ms-auto" (click)="togglePasswordEditMode()">
+            <span class="icon-common icon-lock icon-add"></span>
+            {{ isPasswordEditMode ? 'Cancel' : 'Update Password' }}
+          </button>
+        </div>
+      </div>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" *ngIf="isPasswordEditMode">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">Current Password</span>
+              </label>
+              <div class="input-group">
+                <input [type]="showCurrentPassword ? 'text' : 'password'" class="form-control" formControlName="currentPassword" placeholder="Enter current password">
+                <button type="button" class="btn btn-outline-secondary" (click)="toggleCurrentPasswordVisibility()">
+                  <span class="icon-common" [ngClass]="showCurrentPassword ? 'icon-toggle-pass' : 'icon-toggle-pass-slash'"></span>
+                </button>
+              </div>
+              <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="text-danger">
+                Current password is required (min 8 characters).
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">New Password</span>
+              </label>
+              <div class="input-group">
+                <input [type]="showNewPassword ? 'text' : 'password'" class="form-control" formControlName="newPassword" placeholder="Enter new password">
+                <button type="button" class="btn btn-outline-secondary" (click)="toggleNewPasswordVisibility()">
+                  <span class="icon-common" [ngClass]="showNewPassword ? 'icon-toggle-pass' : 'icon-toggle-pass-slash'"></span>
+                </button>
+              </div>
+              <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="text-danger">
+                New password is required (min 8 characters).
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="lbl-form-wrapper">
+                <span class="lbl-form">Confirm New Password</span>
+              </label>
+              <div class="input-group">
+                <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" formControlName="confirmPassword" placeholder="Confirm new password">
+                <button type="button" class="btn btn-outline-secondary" (click)="toggleConfirmPasswordVisibility()">
+                  <span class="icon-common" [ngClass]="showConfirmPassword ? 'icon-toggle-pass' : 'icon-toggle-pass-slash'"></span>
+                </button>
+              </div>
+              <div *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" class="text-danger">
+                Passwords do not match.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Form Footer -->
+        <div class="form-footer">
+          <button type="submit" class="btn-form-action btn-primary" [disabled]="!passwordForm.valid || savingPassword">Save Password</button>
+          <button type="button" class="btn-form-action btn-secondary" (click)="togglePasswordEditMode()">Cancel</button>
+        </div>
+      </form>
+
+      <div *ngIf="!isPasswordEditMode" class="text-center password-info">
+        <p class="lbl-info">Click 'Update Password' to change your password securely. Ensure your new password is strong and unique.</p>
+      </div>
+    </div>
+  </div>
+</div>

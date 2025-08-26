@@ -1,0 +1,48 @@
+@use "sass:color";
+
+.image-preview {
+  position: relative;
+  margin-top: 1rem;
+  max-width: 150px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.img-preview {
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  border-radius: 10px;
+  border: 2px solid #784421;
+  box-shadow: 0 2px 6px rgba(120, 68, 33, 0.1);
+  object-fit: cover;
+}
+
+.remove-image {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #784421;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+
+  &:hover {
+    background: color.adjust(#784421, $lightness: -10%);
+  }
+
+  .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+}

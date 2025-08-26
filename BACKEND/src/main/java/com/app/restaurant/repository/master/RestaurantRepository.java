@@ -1,0 +1,9 @@
+package com.app.restaurant.repository.master;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import com.app.restaurant.model.master.Restaurant;
+
+public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>, JpaSpecificationExecutor<Restaurant> {
+}

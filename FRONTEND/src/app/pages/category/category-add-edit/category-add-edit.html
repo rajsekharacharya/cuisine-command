@@ -1,0 +1,96 @@
+<div class="body-area">
+  <div class="body-area-header page-action-container">
+    <div class="row w-100 align-items-center">
+      <div class="col-6">
+        <div class="body-header-title title-primary">
+          {{ isEditMode ? 'Edit Category' : 'Add Category' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-area-content">
+    <div class="view-container">
+      <form class="form-container" [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
+        <div class="row">
+
+          <!-- Name -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Name:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <input type="text" class="form-control" formControlName="name" placeholder="Enter Name" />
+              </label>
+              @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+                <div class="text-danger">Name is required.</div>
+              }
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Description:</span>
+                </span>
+                <textarea class="form-control" formControlName="description" placeholder="Enter Description"></textarea>
+              </label>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Status:</span>
+                </span>
+                <select class="form-select" formControlName="status">
+                  <option [value]="true">Active</option>
+                  <option [value]="false">Inactive</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <!-- Image -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Image:</span>
+                </span>
+                <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event)" #fileInput/>
+              </label>
+            </div>
+
+            @if (previewUrl) {
+              <div class="image-preview">
+                <img [src]="previewUrl" alt="Image preview" class="img-preview" />
+                <button type="button" class="btn btn-danger mt-2" (click)="removeImage()">Remove Image</button>
+              </div>
+            }
+          </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary btn-form-action"
+            [disabled]="!categoryForm.dirty && !isEditMode"
+            (click)="resetCategory()">
+            Reset
+          </button>
+
+          <button type="submit" class="btn btn-primary btn-form-action" [disabled]="categoryForm.invalid || loading">
+            {{ loading ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

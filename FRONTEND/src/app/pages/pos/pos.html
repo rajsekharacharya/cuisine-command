@@ -1,0 +1,589 @@
+<!-- Loading State -->
+@if (loading) {
+<div class="text-center p-5 loading-state bg-light rounded shadow-sm">
+
+  <!-- Bootstrap Icon Spinner -->
+  <div class="mb-3">
+    <i class="bi bi-arrow-repeat spin text-primary" style="font-size: 2.5rem;"></i>
+  </div>
+
+  <!-- Loading Text -->
+  <p class="fw-semibold text-primary mb-1">Loading...</p>
+  <p class="text-muted mb-0">
+    <i class="bi bi-egg-fried text-warning me-1"></i> Cooking up your data...
+  </p>
+</div>
+}
+
+@if (!loading) {
+<div class="pos-page-wrapper">
+  <!-- category -->
+  <div class="pos-page-section-wrapper category-wrapper">
+    <div class="pos-section-header-container">
+      <div class="pos-section-header">
+        <span class="icon-common-vivid icon-header icon-pos-categories"></span>
+        <span class="lbl-header lbl-ellipsis">Categories</span>
+      </div>
+    </div>
+    <div class="pos-section-body-container">
+      <div class="pos-section-body-inner">
+        <!-- loop this to get categories -->
+        @for (category of categories; track $index) {
+        <a class="category-item" (click)="onCategorySelect(category)"
+          [ngClass]="{'active': category.id === selectedCategory}">
+          <img class="img-category-item" [src]="apiUrl + '/' + category.image" alt="{{ category.name }}">
+          <span class="lbl-category-item">{{ category.name }}</span>
+        </a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- menu-items -->
+  <div class="pos-page-section-wrapper menu-items-wrapper">
+    <div class="pos-section-header-container">
+      <div class="pos-section-header-inline">
+        <div class="pos-section-header">
+          <span class="icon-common-vivid icon-header icon-pos-menu-items"></span>
+          <span class="lbl-header lbl-ellipsis"><span class="d-none d-lg-inline">Menu </span><span>Items</span></span>
+        </div>
+      </div>
+      <!-- Search -->
+      <div class="search-menu-items-container">
+        <input type="search" class="form-control search-menu-items" placeholder="Search menu items..."
+          [(ngModel)]="searchTerm" (ngModelChange)="filterMenuItems()" [ngClass]="{'active': showCustomerDropdown}" />
+        <span class="icon-common icon-search"></span>
+      </div>
+    </div>
+
+    <div class="pos-section-body-container">
+      @if (!filteredItems.length) {
+      <div class="no-items-message text-center p-5">
+        <div class="icon-wrapper mb-3">
+          <i class="bi bi-search text-danger"></i>
+        </div>
+        <h5 class="text-danger fw-bold">No menu items found</h5>
+        <p class="text-muted mb-0">Try adjusting your search or add a new item</p>
+      </div>
+      }
+      @else {
+      <div class="pos-section-body-inner">
+        <div class="menu-items-container">
+          @for (item of filteredItems; track $index) {
+          <div class="menu-items">
+            <div class="menu-item-info">
+              <div class="menu-items-header">
+                <span class="menu-item-title">
+                  <span class="icon-common-vivid icon-menu-item " [ngClass]="{
+                  'icon-veg': item.dietary === 'VEG',
+                  'icon-non-veg': item.dietary === 'NON_VEG',
+                  'icon-vegan': item.dietary === 'VEGAN'
+                }"></span>
+                  <span class="lbl-item-title"><span>{{ item.name }}</span></span>
+                </span>
+                @if(item.variation){
+                <span class="lbl-price">Variants: {{ item.variations.length }}</span>
+                }
+                @else {
+                <span class="lbl-price">Price: ₹{{ item.price }}</span>
+                }
+              </div>
+              <!-- Add-ons for Item (if no variations) -->
+              @if(item.addons && !item.variation){
+              <div class="menu-item-body">
+                <!-- <div class="item-body-header">Add on :</div> -->
+                <div class="add-on-item-container">
+                  @for (addon of item.itemAddons; track $index) {
+                  <label class="add-on-item" [for]="'addon-' + item.id + '-' + addon.id">
+                    <span class="item-info">
+                      <span class="item-name">{{ addon.name }}</span>
+                      <span class="item-price">₹{{ addon.price }}</span>
+                    </span>
+                    <span class="item-check">
+                      <input type="checkbox" checked="checked" [id]="'addon-' + item.id + '-' + addon.id"
+                        [(ngModel)]="item.selectedAddons[addon.id]">
+                      <span class="checkmark"></span>
+                    </span>
+                  </label>
+                  }
+                </div>
+              </div>
+              }
+            </div>
+            <div class="menu-item-footer">
+              <a class="btn-menu-item-cta lbl-ellipsis" (click)="addToCart(item)">{{ item.variation ? 'Select Variation'
+                : 'Add to Cart' }}</a>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- cart -->
+  <div class="pos-page-section-wrapper cart-wrapper">
+    <div class="pos-section-header-container">
+      <div class="pos-section-header">
+        <span class="icon-common-vivid icon-header icon-pos-cart"></span>
+        <span class="lbl-header lbl-ellipsis">Cart</span>
+      </div>
+      <!-- Reprint Section -->
+      <div class="reprint-section">
+        <div class="dropdown">
+          <button class="btn-common btn-reprint" type="button" data-bs-toggle="dropdown">
+            <span class="icon-common-vivid icon-header icon-print"></span><span>Reprint Order</span>
+          </button>
+          <ul class="dropdown-menu">
+            @for (order of pastOrders; track $index) {
+            <li>
+              <a class="dropdown-item" (click)="reprintOrder(order.id)">Order #{{ order.id }} ({{ order.orderType
+                }})</a>
+            </li>
+            }
+            @if (!pastOrders.length) {
+            <li>
+              <a class="dropdown-item disabled">No recent orders</a>
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="pos-section-body-container">
+      <div class="pos-section-body-inner">
+
+        <!-- <div class="card-body overflow-auto modern-card-body" style="max-height: 250px;"> -->
+        <div class="cart-type-wrapper" role="group">
+          <button type="button" class="btn-common btn-cart-type"
+            [ngClass]="{ 'active': selectedOrderType === OrderType.DINE_IN }"
+            (click)="selectOrderType(OrderType.DINE_IN)">Dine-In</button>
+          <button type="button" class="btn-common btn-cart-type"
+            [ngClass]="{ 'active': selectedOrderType === OrderType.DELIVERY }"
+            (click)="selectOrderType(OrderType.DELIVERY)">Delivery</button>
+          <button type="button" class="btn-common btn-cart-type"
+            [ngClass]="{ 'active': selectedOrderType === OrderType.PICKUP }"
+            (click)="selectOrderType(OrderType.PICKUP)">Pickup</button>
+        </div>
+
+        @if(cart.length){
+        <div class="cart-card-wrapper item-cart-wrapper">
+          <div class="item-cart-container">
+            <div class="table-cart-item">
+              @for(cartItem of cart; track $index) {
+              <!-- <tr class="cart-item animate__animated animate__fadeIn">
+                <td class="col-type">
+                  <span class="icon-common-vivid icon-cart-item-type" [ngClass]="{
+                            'icon-veg': cartItem.dietary === 'VEG',
+                            'icon-non-veg': cartItem.dietary === 'NON_VEG',
+                            'icon-vegan': cartItem.dietary === 'VEGAN'
+                          }"></span>
+                </td>
+                <td class="col-name">
+                  <div class="lbl-item-name">{{ getItemDisplayName(cartItem) }}</div>
+                  <div class="item-add-on">{{ getAddonsDisplay(cartItem) }}</div>
+                </td>
+                <td class="col-qty">
+                  <span class="item-qty">
+                    <button class="btn-common btn-qty-action" [ngClass]="{'diasbled' : cartItem.quantity === 1}"
+                      (click)="decreaseQuantity(cartItem)" [disabled]="cartItem.quantity === 1"><span>-</span></button>
+                    <span class="text-muted">{{ cartItem.quantity }}</span>
+                    <button class="btn-common btn-qty-action"
+                      (click)="increaseQuantity(cartItem)"><span>+</span></button>
+                  </span>
+                </td>
+                <td class="col-price"><span class="item-price">₹{{ getItemSubtotal(cartItem) }}</span></td>
+                <td class="col-item-action"><a class="btn-common btn-list btn-delete"
+                    (click)="removeItem(cartItem)"><span class="icon-common icon-btn icon-trash"></span></a></td>
+              </tr> -->
+              <div class="cart-row cart-item" [id]="cartItem.cartItemId">
+                <div class="cart-col col-type">
+                  <span class="icon-common-vivid icon-cart-item-type" [ngClass]="{
+                              'icon-veg': cartItem.dietary === 'VEG',
+                              'icon-non-veg': cartItem.dietary === 'NON_VEG',
+                              'icon-vegan': cartItem.dietary === 'VEGAN'
+                            }"></span>
+                </div>
+                <div class="cart-col col-name">
+                  <div class="lbl-item-name">{{ getItemDisplayName(cartItem) }}</div>
+                  <div class="item-add-on">{{ getAddonsDisplay(cartItem) }}</div>
+                </div>
+                <div class="cart-col col-qty">
+                  <span class="item-qty">
+                    <button class="btn-common btn-qty-action" [ngClass]="{'diasbled' : cartItem.quantity === 1}"
+                      (click)="decreaseQuantity(cartItem)" [disabled]="cartItem.quantity === 1"><span>-</span></button>
+                    <span class="text-muted">{{ cartItem.quantity }}</span>
+                    <button class="btn-common btn-qty-action"
+                      (click)="increaseQuantity(cartItem)"><span>+</span></button>
+                  </span>
+                </div>
+                <div class="cart-col col-price"><span class="item-price">₹{{ getItemSubtotal(cartItem) }}</span></div>
+                <div class="cart-col col-item-action">
+                  <a class="btn-common btn-list btn-delete" (click)="removeItem(cartItem)">
+                    <span class="icon-common icon-btn icon-trash"></span>
+                  </a>
+                </div>
+              </div>
+
+              }
+            </div>
+          </div>
+          <div class="btn-expand-conatiner">
+            <a class="btn-common btn-details" (click)="toggleDetails($event)">
+              <span>Bill Summary</span>
+              <span class="icon-common icon-btn icon-chevron" [ngClass]="{ 'icon-chevron-up': showDetails }"></span>
+            </a>
+          </div>
+        </div>
+        }
+        <div class="collapse" [ngClass]="{ 'show': showDetails }">
+          <div class="cart-card-wrapper summary-wrapper">
+            <div class="summary-item">
+              <span class="summary-caption lbl-caption lbl-medium">Subtotal ({{ totalQuantity }} item{{ totalQuantity >
+                1 ? 's' : '' }})</span>
+              <span class="summary-value lbl-medium">₹{{ subtotal }}</span>
+            </div>
+            <div class="summary-item">
+              <label class="summary-caption">
+                <span class="lbl-caption">Discount(%)</span>
+                <input type="number" class="custom-input" [(ngModel)]="discountPercent"
+                  (ngModelChange)="calculateTotal()" min="0" max="100" step="0.1">
+              </label>
+              <div class="summary-value" [title]="discountAmount">
+                <span class="lbl-ellipsis">₹{{ discountAmount }}</span>
+              </div>
+            </div>
+            @if(selectedOrderType === OrderType.DELIVERY){
+            <div class="summary-item">
+              <label class="summary-caption">
+                <span class="lbl-caption">Delivery Charge</span>
+                <input type="number" class="custom-input" [(ngModel)]="deliveryCharge"
+                  (ngModelChange)="calculateTotal()" min="0" step="1">
+              </label>
+              <div class="summary-value" [title]="deliveryCharge">
+                <span class="lbl-ellipsis">₹{{ deliveryCharge }}</span>
+              </div>
+            </div>
+            }
+            @if(selectedOrderType === OrderType.DELIVERY || selectedOrderType === OrderType.PICKUP){
+            <div class="summary-item">
+              <label class="summary-caption">
+                <span class="lbl-caption">Container Charge</span>
+                <input type="number" class="custom-input" [(ngModel)]="containerCharge"
+                  (ngModelChange)="calculateTotal()" min="0" step="1">
+              </label>
+              <div class="summary-value" [title]="containerCharge">
+                <span class="lbl-ellipsis">₹{{ containerCharge }}</span>
+              </div>
+            </div>
+            }
+            <div class="summary-item">
+              <label class="summary-caption">
+                <span class="lbl-caption">Tax(%)</span>
+                <input type="number" class="custom-input" [(ngModel)]="taxPercent" (ngModelChange)="calculateTotal()"
+                  min="0" max="100" step="0.1">
+              </label>
+              <div class="summary-value" [title]="taxAmount">
+                <span class="lbl-ellipsis">₹{{ taxAmount }}</span>
+              </div>
+            </div>
+            <div class="summary-item">
+              <span class="summary-caption lbl-caption lbl-medium">Round Off</span>
+              <span class="summary-value lbl-bold">₹{{ roundOff | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cart-card-wrapper">
+          <div class="item-value-container item-price-container">
+            <span class="lbl-caption">Total</span>
+            <span class="lbl-value">₹{{ finalTotal }}</span>
+          </div>
+        </div>
+
+        @if(selectedOrderType === OrderType.DINE_IN){
+        <div class="cart-card-wrapper">
+          <label class="item-value-container item-table-no-container">
+            <span class="lbl-caption">Table no.</span>
+            <input class="custom-input" id="tableInput" type="text" [(ngModel)]="tableNumber" placeholder="e.g. 5" />
+          </label>
+        </div>
+        }
+        <div class="cart-card-wrapper">
+          <div class="item-value-container item-customer-container">
+            <div class="item-customer">
+              <span class="lbl-caption">Customer:</span>
+              <button class="btn-common btn-add-customer" (click)="openAddCustomerModal()">Add</button>
+            </div>
+            <div class="select-customer mt-2">
+              <div class="searchable-dropdown w-100" [ngClass]="{'active': showCustomerDropdown}">
+                <input type="text" class="form-select search-input" placeholder="Search customer..."
+                  [(ngModel)]="customerSearchQuery" (input)="filterCustomers()" (click)="toggleDropdown()"
+                  [ngClass]="{'active': showCustomerDropdown}" [readonly]="!!selectedCustomerId" />
+                <div class="dropdown-menu w-100" [ngClass]="{'show': showCustomerDropdown}">
+                  <div class="dropdown-item no-customer" (click)="selectCustomer(null)">
+                    No Customer
+                  </div>
+                  @for (customer of filteredCustomers; track $index) {
+                  <div class="dropdown-item" (click)="selectCustomer(customer.id)"
+                    [ngClass]="{'active': selectedCustomerId === customer.id}">
+                    {{ customer.name }} ({{ customer.phone }})
+                  </div>
+                  }
+                  @if (!filteredCustomers.length && customerSearchQuery) {
+                  <div class="dropdown-item disabled">No customers found</div>
+                  }
+                </div>
+              </div>
+              @if (selectedCustomerId) {
+              <button class="btn-common btn-icon btn-clear" (click)="clearCustomer()">
+                <span class="icon-common icon-btn icon-cross"></span>
+              </button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="cart-card-wrapper">
+          <div class="item-value-container item-payment-container">
+            <div class="lbl-caption">Payment mode</div>
+            <div class="payment-type-container">
+              @for (method of paymentMethods; track $index) {
+              <label class="payment-type" [ngClass]="{'active': selectedPaymentMethod === method.value}">
+                <span class="icon-common-vivid icon-payment-type icon-{{ method.iconClass }}"></span>
+                <span class="lbl-type">{{ method.label }}</span>
+                <input class="form-check-input d-none" type="radio" [id]="method.value" [value]="method.value"
+                  [(ngModel)]="selectedPaymentMethod">
+              </label>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item-footer">
+          <a class="btn-menu-item-cta" (click)="checkout()">Checkout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Options Modal -->
+  @if (showPrintOptions) {
+  <div class="modal fade show d-block" id="printOptionsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modern-modal-content shadow-lg rounded-3">
+        <div class="modal-header gradient-primary text-white border-0 rounded-top">
+          <h5 class="modal-title fw-bold">Select Print Option</h5>
+          <button type="button" class="btn-close modern-close-btn" (click)="showPrintOptions = false">❌</button>
+        </div>
+        <div class="modal-body p-4">
+          <p>Please choose how to print Order #{{ printOrder?.id }}:</p>
+          <div class="d-flex flex-column gap-3">
+            <button class="btn btn-primary gradient-button" (click)="showPreview('kotAndBill')">Preview KOT +
+              Bill</button>
+            <button class="btn btn-primary gradient-button" (click)="showPreview('kot')">Preview KOT Only</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Print Preview Modal -->
+  @if (showPrintPreview) {
+  <div class="modal fade show d-block" id="printPreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modern-modal-content shadow-lg rounded-3">
+        <div class="modal-header gradient-primary text-white border-0 rounded-top">
+          <h5 class="modal-title fw-bold">Print Preview - Order #{{ printOrder?.id }}</h5>
+          <button type="button" class="btn-close modern-close-btn" (click)="cancelPrint()">❌</button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="preview-content">
+            <div class="branding">
+              <img src="{{ logoBase64 }}" alt="Ranna Sathi Logo">
+              <h1>{{ restaurantName }}</h1>
+            </div>
+            <div class="kot">
+              <h2>Kitchen Order Ticket</h2>
+              <p><strong>Order ID:</strong> {{ printOrder?.id }}</p>
+              <p><strong>Order Date:</strong> {{ printOrder?.orderDate }}</p>
+              <p><strong>Order Time:</strong> {{ printOrder?.orderTime }}</p>
+              <p><strong>Order Type:</strong> {{ printOrder?.orderType }}</p>
+              <p><strong>Table:</strong> {{ printOrder?.tableNumber || 'N/A' }}</p>
+              <p><strong>Status:</strong> {{ printOrder?.status }}</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Addons</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of printOrder?.kot?.items">
+                    <td>{{ item.itemName }}{{ item.variationName ? ' (' + item.variationName + ')' : '' }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ getAddonNames(item.addons) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="divider" *ngIf="previewType === 'kotAndBill'">--- Customer Bill ---</div>
+            <div class="bill" *ngIf="previewType === 'kotAndBill'">
+              <h2>Customer Bill</h2>
+              <p><strong>Order ID:</strong> {{ printOrder?.id }}</p>
+              <p><strong>Order Date:</strong> {{ printOrder?.orderDate }}</p>
+              <p><strong>Order Time:</strong> {{ printOrder?.orderTime }}</p>
+              <p><strong>Customer:</strong> {{ printOrder?.bill?.customerName || 'Guest' }}</p>
+              <p><strong>Order Type:</strong> {{ printOrder?.orderType }}</p>
+              <p><strong>Table:</strong> {{ printOrder?.tableNumber || 'N/A' }}</p>
+              <p><strong>Payment:</strong> {{ printOrder?.paymentMethod }}</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of printOrder?.bill?.items">
+                    <td>{{ getBillItemDisplayName(item) }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.price }}</td>
+                    <td>₹{{ item.subtotal }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="summary">
+                <div><span>Subtotal:</span><span>₹{{ printOrder?.bill?.subtotal }}</span></div>
+                <div><span>Discount ({{ printOrder?.bill?.discountPercent }}%):</span><span>₹{{
+                    printOrder?.bill?.discountAmount }}</span></div>
+                <div><span>Tax ({{ printOrder?.bill?.taxPercent }}%):</span><span>₹{{ printOrder?.bill?.taxAmount
+                    }}</span></div>
+                <div><span>Delivery Charge:</span><span>₹{{ printOrder?.bill?.deliveryCharge }}</span></div>
+                <div><span>Container Charge:</span><span>₹{{ printOrder?.bill?.containerCharge }}</span></div>
+                <div><span>Round Off:</span><span>₹{{ printOrder?.bill?.roundOff }}</span></div>
+                <div class="total"><span>Final Total:</span><span>₹{{ printOrder?.bill?.finalTotal }}</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end gap-3 mt-3">
+            <button class="btn btn-primary gradient-button" (click)="confirmPrint()">Print</button>
+            <button class="btn btn-secondary gradient-button" (click)="cancelPrint()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Variation Modal -->
+  @if (showVariationModal) {
+  <div class="modal fade show d-block" id="variationModal" tabindex="-1" aria-labelledby="variationModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modern-modal-content shadow-lg rounded-3">
+        <div class="modal-header gradient-primary text-white border-0 rounded-top">
+          <span class="menu-item-title">
+            <span class="icon-common-vivid icon-menu-item " [ngClass]="{
+                  'icon-veg': selectedItem?.dietary === 'VEG',
+                  'icon-non-veg': selectedItem?.dietary === 'NON_VEG',
+                  'icon-vegan': selectedItem?.dietary === 'VEGAN'
+                }"></span>
+            <span class="lbl-item-title">
+              <h5 class="modal-title fw-bold" id="variationModalLabel">Select Variation for {{ selectedItem?.name }}
+              </h5>
+            </span>
+          </span>
+          <button type="button" class="btn-close modern-close-btn" (click)="closeVariationModal()">❌</button>
+        </div>
+        <div class="modal-body p-4 modern-modal-body">
+          <div class="row g-3">
+            @for (variation of selectedItem?.variations; track $index) {
+            <div class="col-md-4">
+              <div class="card h-100 item-card modern-item-card shadow-sm border-0 animate__animated animate__fadeIn">
+                <!-- <div class="card-body text-center p-3"> -->
+                <div class="menu-items">
+                  <div class="menu-item-info">
+                    <div class="menu-items-header">
+                      <div class="variation-title">{{ variation.name }}</div>
+                      <span class="lbl-price">₹{{ variation.price }}</span>
+                    </div>
+                    @if(variation.addons){
+                    <div class="menu-item-body">
+                      <!-- <div class="item-body-header">Add on :</div> -->
+                      <div class="add-on-item-container">
+                        @for (addon of variation.itemAddons; track $index) {
+                        <label class="add-on-item"
+                          [for]="'addon-' + selectedItem?.id + '-' + variation.id + '-' + addon.id">
+                          <span class="item-info">
+                            <span class="item-name">{{ addon.name }}</span>
+                            <span class="item-price">₹{{ addon.price }}</span>
+                          </span>
+                          <span class="item-check">
+                            <input type="checkbox" checked="checked"
+                              [id]="'addon-' + selectedItem?.id + '-' + variation.id + '-' + addon.id"
+                              [(ngModel)]="variation.selectedAddons[addon.id]">
+                            <span class="checkmark"></span>
+                          </span>
+                        </label>
+                        }
+                      </div>
+                    </div>
+                    }
+                    <div class="menu-item-footer">
+                      <a class="btn-menu-item-cta" (click)="selectVariation(variation)">Add
+                        to Cart</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- </div> -->
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Customer Modal -->
+  @if (showAddCustomerModal) {
+  <div class="modal fade show d-block" id="addCustomerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modern-modal-content shadow-lg rounded-3">
+        <div class="modal-header gradient-primary text-white border-0 rounded-top">
+          <h5 class="modal-title fw-bold">Add New Customer</h5>
+          <button type="button" class="btn-close modern-close-btn" (click)="closeAddCustomerModal()">❌</button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label for="customerName" class="form-label">Name</label>
+            <input id="customerName" type="text" class="form-control modern-input" [(ngModel)]="newCustomer.name"
+              placeholder="Enter name">
+          </div>
+          <div class="mb-3">
+            <label for="customerPhone" class="form-label">Phone</label>
+            <input id="customerPhone" type="text" class="form-control modern-input" [(ngModel)]="newCustomer.phone"
+              placeholder="Enter phone">
+          </div>
+          <div class="mb-3">
+            <label for="customerEmail" class="form-label">Email</label>
+            <input id="customerEmail" type="email" class="form-control modern-input" [(ngModel)]="newCustomer.email"
+              placeholder="Enter email (optional)">
+          </div>
+          <div class="menu-item-footer">
+            <a class="btn-menu-item-cta" (click)="saveCustomer()">Save Customer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+</div>
+}

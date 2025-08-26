@@ -1,0 +1,77 @@
+<div class="body-area">
+  <div class="body-area-header page-action-container">
+    <div class="row w-100 align-items-center">
+      <div class="col-6">
+        <div class="body-header-title title-primary">
+          {{ isEditMode ? 'Edit Variation' : 'Add Variation' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-area-content">
+    <div class="view-container">
+      <form class="form-container" [formGroup]="variationForm" (ngSubmit)="saveVariation()">
+        <div class="row">
+
+          <!-- Name -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Name:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <input type="text" class="form-control" formControlName="name" placeholder="Enter Name" />
+                @if (variationForm.get('name')?.invalid && variationForm.get('name')?.touched) {
+                  <div class="text-danger">Name is required.</div>
+                }
+              </label>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Description:</span></span>
+                <textarea class="form-control" formControlName="description" placeholder="Enter Description"></textarea>
+              </label>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Status:</span></span>
+                <select class="form-select" formControlName="status">
+                  <option [value]="true">Active</option>
+                  <option [value]="false">Inactive</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-footer">
+          <button
+            type="button"
+            class="btn btn-secondary btn-form-action"
+            [disabled]="!isEditMode && !variationForm.dirty"
+            (click)="resetVariation()">
+            Reset
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-form-action"
+            [disabled]="variationForm.invalid || loading">
+            {{ loading ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

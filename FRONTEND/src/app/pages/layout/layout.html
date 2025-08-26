@@ -1,0 +1,148 @@
+<div class="main-wrapper" id="mainWrapper" #mainWrapper>
+  <div class="header">
+    <div class="logo-container">
+      <div class="nav-toggle-container" id="navToggler" #navToggler>
+        <span class="toggler-icon-top"></span>
+        <span class="toggler-icon-middle"></span>
+        <span class="toggler-icon-bottom"></span>
+      </div>
+      <img src="images/logo.png" alt="V-Integrate" class="nav-logo">
+      <span class="brand-name"><span class="d-sm-inline d-none">Bhojon Desk</span></span>
+      <span class="current-time d-sm-inline d-none">{{ currentTime }}</span>
+
+    </div>
+
+    <div class="toolbar-container d-flex align-items-center">
+      <div class="toolbar-item me-3">
+        <div class="profile-container">
+          <a class="toolbar-link" role="button" (click)="openCalculator()" title="Calculator (F2 to open)">
+            <span class="icon-common icon-toolbar icon-calculator">
+            </span>
+          </a>
+        </div>
+      </div>
+      <div class="toolbar-item me-3">
+        <div class="profile-container">
+          <a class="toolbar-link" role="button" (click)="toggleFullScreen()">
+            <span class="icon-common icon-toolbar icon-fullscreen" [class.active]="isFullScreen">
+            </span>
+          </a>
+        </div>
+      </div>
+      <div class="toolbar-item me-3">
+        <div class="profile-container">
+          <div class="dropdown">
+            <a class="toolbar-link" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="icon-common icon-toolbar icon-notification"></span>
+            </a>
+            <ul class="dropdown-menu profile-details-container" aria-labelledby="dropdownMenuLink">
+              <br />
+              <br />
+              <br />
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="toolbar-item me-3">
+        <div class="profile-container">
+          <div class="dropdown">
+            <a class="toolbar-link" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="icon-toolbar-container icon-toolbar-lg">
+                <span class="icon-common icon-toolbar icon-user"></span>
+                <span class="icon-active"></span>
+              </a>
+              <div class="profile-name-container">
+                <span>
+                  <span class="profile-name">{{ 'admin' }}</span>
+                  <span class="icon-common icon-toolbar icon-chevron"></span>
+                </span>
+                <span class="profile-id">{{ 'admin' }}</span>
+              </div>
+            </a>
+            <ul class="dropdown-menu profile-details-container" aria-labelledby="dropdownMenuLink">
+              <li class="media dropdown-item">
+                <a class="profile-container" [routerLink]="['/user-detail']">
+                  <span class="icon-common icon-header-dropdown-items icon-profile"></span>
+                  <span class="lbl-header-menu">My Profile</span>
+                </a>
+              </li>
+              <li>
+                <div class="dv-separator mt-1 mb-1"></div>
+              </li>
+              <li class="media dropdown-item">
+                <a class="logout-container" (click)="logout()" [ngClass]="{'disable': loading}">
+                  <span class="icon-common icon-header-dropdown-items icon-logout"></span>
+                  <span class="lbl-header-menu">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="left-bar" #navContainer>
+      <div class="side-menu" #navMenu>
+        <div class="side-menu-header d-none"></div>
+        <div class="side-menu-body">
+          <ul class="nav-menu-container">
+            @for (item of menu; track item.label) {
+            @if (!item.isGroup) {
+            <li class="nav-item" [ngClass]="{ 'active': isActive(item) }">
+              <a class="nav-link link-target" (click)="respMenuClose()" [routerLink]="item.route"
+                routerLinkActive="active">
+                <span class="icon-common icon-sidemenu {{ item.icon }}"></span>
+                <span class="link-name">{{ item.label }}</span>
+              </a>
+            </li>
+            } @else {
+            <li class="nav-item link-target" [ngClass]="{
+              'sub-menu-active': isSubMenuOpen(item),
+              'active': isSubMenuOpen(item)
+            }">
+              <a class="nav-link" (click)="toggleSubMenu($event, item.label)">
+                <span class="icon-common icon-sidemenu {{ item.icon }}"></span>
+                <span class="link-name">{{ item.label }}</span>
+                <span class="icon-common icon-sidemenu icon-chevron"></span>
+              </a>
+              @if (isSubMenuOpen(item)) {
+              <ul class="sub-menu-container">
+                @for (sub of item.children; track sub.label) {
+                <li class="sub-menu-item" [ngClass]="{ 'active': isActive(sub) }">
+                  <a class="sub-menu-link link-target" (click)="respMenuClose()" [routerLink]="sub.route"
+                    routerLinkActive="active">
+                    <span class="icon-common icon-submenu {{ sub.icon }}"></span>
+                    <span class="submenu-link-label">{{ sub.label }}</span>
+                  </a>
+                </li>
+                }
+              </ul>
+              }
+            </li>
+            }
+            }
+          </ul>
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <div class="right-bar">
+      <div class="body-wrapper" #bodyWrapper>
+        <div id='parentDBArea' class="view-area">
+          <router-outlet></router-outlet>
+        </div>
+        <!-- <div class="footer">
+          <div class="lbl-footer">Copyright © APP Pvt. Ltd</div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Floating Calculator Component -->
+<!-- <app-calculator #calculator></app-calculator> -->

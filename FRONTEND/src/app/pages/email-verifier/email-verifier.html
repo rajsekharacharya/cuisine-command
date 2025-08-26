@@ -1,0 +1,17 @@
+<div class="verifier-container" [@fadeInOut]="animationState" aria-live="polite">
+  <div class="card">
+    <h1>Email Verification</h1>
+    <div class="content">
+      @if (isVerifying) {
+        <mat-spinner diameter="50" [@spinnerRotate]="spinnerState" aria-label="Verifying email"></mat-spinner>
+        <p class="message">Please wait while we verify your email...</p>
+      } @else if (errorMessage) {
+        <p class="error" role="alert">{{ errorMessage }}</p>
+        <a class="link" (click)="navigateToLogin()" role="button" tabindex="0">Go to Login</a>
+      } @else {
+        <p class="success">Email verified successfully!</p>
+        <a class="link" (click)="navigateToLogin()" role="button" tabindex="0">Go to Login</a>
+      }
+    </div>
+  </div>
+</div>

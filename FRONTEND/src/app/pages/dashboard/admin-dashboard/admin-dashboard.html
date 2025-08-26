@@ -1,0 +1,233 @@
+<div class="pos-page-wrapper dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="pos-section-header-container mb-4">
+    <div class="pos-section-header">
+      <span class="icon-common-vivid icon-header icon-pos-dashboard"></span>
+      <span class="lbl-header lbl-ellipsis">Restaurant Insights</span>
+    </div>
+    <div class="date-picker-wrapper d-flex align-items-center gap-3 p-3">
+      <div class="date-input-group">
+        <label for="startDate" class="form-label"><span class="icon-common-vivid icon-calendar"></span>Start
+          Date</label>
+        <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate"
+          (ngModelChange)="onDateRangeChange()">
+      </div>
+      <div class="date-input-group">
+        <label for="endDate" class="form-label"><span class="icon-common-vivid icon-calendar"></span>End Date</label>
+        <input type="date" id="endDate" class="form-control" [(ngModel)]="endDate"
+          (ngModelChange)="onDateRangeChange()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading) {
+  <div class="text-center p-5 loading-state">
+    <div class="spinner-border text-primary spinner-lg" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted"><span class="icon-common-vivid icon-utensils"></span>Cooking up your data...</p>
+  </div>
+  }
+
+  <!-- Error State -->
+  @if (error) {
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span class="icon-common-vivid icon-exclamation"></span>{{ error }}
+    <button type="button" class="btn-close" (click)="error = null" aria-label="Close"></button>
+  </div>
+  }
+
+  <!-- Dashboard Content -->
+  @if (!loading && !error && dashboardData) {
+  <div class="pos-section-body-container">
+    <div class="pos-section-body-inner">
+      <!-- Stat Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-3">
+          <div class="card stat-card fade-in">
+            <div class="card-body d-flex align-items-center">
+              <span class="icon-common-vivid icon-orders"></span>
+              <div>
+                <h5 class="card-title">Today's Orders</h5>
+                <p class="card-text display-4 mb-0">{{ dashboardData.completedOrders.today }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3">
+          <div class="card stat-card fade-in">
+            <div class="card-body d-flex align-items-center">
+              <span class="icon-common-vivid icon-revenue"></span>
+              <div>
+                <h5 class="card-title">Today's Revenue</h5>
+                <p class="card-text display-4 mb-0">₹{{ dashboardData.revenue.today | number: '1.2-2' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3">
+          <div class="card stat-card fade-in">
+            <div class="card-body d-flex align-items-center">
+              <span class="icon-common-vivid icon-avg-order"></span>
+              <div>
+                <h5 class="card-title">Avg. Order Value</h5>
+                <p class="card-text display-4 mb-0">₹{{ dashboardData.averageOrderValue.today | number: '1.2-2' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3">
+          <div class="card stat-card fade-in">
+            <div class="card-body d-flex align-items-center">
+              <span class="icon-common-vivid icon-cancellations"></span>
+              <div>
+                <h5 class="card-title">Cancellations</h5>
+                <p class="card-text display-4 mb-0">{{ dashboardData.canceledOrders.today }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="card chart-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-clock"></span>Peak Hours
+            </div>
+            <div class="card-body chart-container">
+              <canvas baseChart [data]="peakHoursChartData" [options]="chartOptions" [type]="'bar'"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card chart-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-graph"></span>Revenue Trends
+            </div>
+            <div class="card-body chart-container">
+              <canvas baseChart [data]="revenueChartData" [options]="chartOptions" [type]="'line'"></canvas>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- Top Dishes and Order Types -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="card chart-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-star"></span>Top 5 Dishes
+            </div>
+            <div class="card-body chart-container">
+              <canvas baseChart [data]="topDishesChartData" [options]="chartOptions" [type]="'bar'"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card chart-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-box"></span>Order Types
+            </div>
+            <div class="card-body chart-container">
+              <canvas baseChart [data]="orderTypeChartData" [options]="chartOptions" [type]="'doughnut'"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Peak Hours and Payment Methods -->
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+          <div class="card chart-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-pie-chart"></span>Order Status
+            </div>
+            <div class="card-body chart-container">
+              <canvas baseChart [data]="orderStatusChartData" [options]="chartOptions" [type]="'pie'"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card chart-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-credit-card"></span>Payment Methods
+            </div>
+            <div class="card-body chart-container">
+              <canvas baseChart [data]="paymentMethodChartData" [options]="chartOptions" [type]="'doughnut'"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Retention and Discount Impact -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="card info-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-people"></span>Customer Retention
+            </div>
+            <div class="card-body d-flex justify-content-between">
+              <p><span class="icon-common-vivid icon-person-plus"></span><strong>New Customers:</strong> {{
+                dashboardData.customerRetention.newCustomers }}</p>
+              <p><span class="icon-common-vivid icon-person-check"></span><strong>Repeat Customers:</strong> {{
+                dashboardData.customerRetention.repeatCustomers }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card info-card fade-in">
+            <div class="card-header d-flex align-items-center">
+              <span class="icon-common-vivid icon-tag"></span>Discount Impact
+            </div>
+            <div class="card-body d-flex justify-content-between">
+              <p><span class="icon-common-vivid icon-currency"></span><strong>Total Discount:</strong> ₹{{
+                dashboardData.discountImpact.totalDiscount | number: '1.2-2' }}</p>
+              <p><span class="icon-common-vivid icon-percent"></span><strong>Discount %:</strong> {{
+                dashboardData.discountImpact.discountPercentage | number: '1.2-2' }}%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="card table-card fade-in">
+        <div class="card-header d-flex align-items-center">
+          <span class="icon-common-vivid icon-list"></span>Recent Orders
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table-cart-item">
+              <thead>
+                <tr>
+                  <th scope="col"><span class="icon-common-vivid icon-hash"></span>Order</th>
+                  <th scope="col"><span class="icon-common-vivid icon-person"></span>Customer</th>
+                  <th scope="col"><span class="icon-common-vivid icon-box"></span>Type</th>
+                  <th scope="col"><span class="icon-common-vivid icon-currency"></span>Total</th>
+                  <th scope="col"><span class="icon-common-vivid icon-check"></span>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let order of dashboardData.recentOrders" class="table-row-hover">
+                  <td>order#{{ order.id }}</td>
+                  <td>{{ order.customerName }}</td>
+                  <td>{{ order.orderType }}</td>
+                  <td>₹{{ order.finalTotal | number: '1.2-2' }}</td>
+                  <td><span class="badge"><span class="icon-common-vivid icon-check"></span>Completed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

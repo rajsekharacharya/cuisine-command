@@ -1,0 +1,147 @@
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.body-wrapper {
+  width: 100%;
+}
+.pass-input-container {
+  display: block;
+  position: relative;
+  input {
+      padding: 0.75rem 3rem 0.75rem 3rem;
+  }
+}
+
+.app-header {
+  background: #f8f8f8;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.current-time {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #666;
+  margin-left: 2rem; /* or use ms-* Bootstrap spacing */
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.error-container {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #BD1111;
+}
+.logout-warning-container {
+  text-align: center;
+  user-select: none;
+}
+.logout-warning-header {
+  font-size: 25px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #3a3246;
+}
+.logout-warning-description {
+  font-size: 18px;
+  margin-bottom: 32px;
+  .lbl-info {
+      justify-content: center;
+      padding: 0;
+  }
+}
+.lbl-fade {
+  color: #817F7F;
+}
+.lbl-danger {
+  color: #BD1111;
+}
+.lbl-blink {
+  animation: blink-animation 1.7s ease-in-out infinite;
+}
+
+@keyframes blink-animation {
+  0% {
+      opacity: .5;
+  }
+
+  25% {
+      opacity: 1;
+  }
+
+  50% {
+      opacity: .5;
+  }
+
+  75% {
+      opacity: 1;
+  }
+
+  100% {
+      opacity: .5;
+  }
+}
+.icon-form,
+.icon-form-before {
+  height: 22px;
+  width: 22px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.icon-form {
+  right: 15px;
+  top: 12px;
+  background-color: #817F7F;
+}
+
+.icon-form-before {
+  background-color: #0054A0;
+  left: 15px;
+  top: 12px;
+}
+
+.icon-lock {
+  mask-image: url(//icons/lock.svg);
+  -webkit-mask-image: url(//icons/lock.svg);
+}
+
+.icon-lock-fill {
+  mask-image: url(//icons/lock-fill.svg);
+  -webkit-mask-image: url(//icons/lock-fill.svg);
+}
+
+.icon-toggle-pass {
+  mask-image: url(//icons/eye-fill.svg) !important;
+  -webkit-mask-image: url(//icons/eye-fill.svg) !important;
+}
+
+.icon-toggle-pass-slash {
+  mask-image: url(//icons/eye-slash-fill.svg);
+  -webkit-mask-image: url(//icons/eye-slash-fill.svg);
+}
+
+.icon-exclamation {
+  mask-image: url(//icons/exclamation-circle.svg);
+  -webkit-mask-image: url(//icons/exclamation-circle.svg);
+  background-color: #BD1111;
+  height: 18px;
+  width: 18px;
+}
+
+.icon-fullscreen.active {
+  background-color: green; /* or any indication of active state */
+}

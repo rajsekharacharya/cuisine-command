@@ -1,0 +1,39 @@
+@if (visible) {
+  <div class="calculator" cdkDrag>
+    <div class="calc-header" cdkDragHandle>
+      <span>::</span>
+      <button class="close-btn" (click)="toggle()">×</button>
+    </div>
+  
+    <input [value]="input" readonly class="calc-display" />
+  
+    <div class="button-grid">
+      <button (click)="backspace()" [class.active]="lastKey === 'Backspace'">⌫</button>
+      <button (click)="append('(')" [class.active]="lastKey === '('">(</button>
+      <button (click)="append(')')" [class.active]="lastKey === ')'">)</button>
+      <button (click)="append('%')" [class.active]="lastKey === '%'">%</button>
+  
+      <button (click)="append('7')" [class.active]="lastKey === '7'">7</button>
+      <button (click)="append('8')" [class.active]="lastKey === '8'">8</button>
+      <button (click)="append('9')" [class.active]="lastKey === '9'">9</button>
+      <button (click)="append('/')" [class.active]="lastKey === '/'">÷</button>
+  
+      <button (click)="append('4')" [class.active]="lastKey === '4'">4</button>
+      <button (click)="append('5')" [class.active]="lastKey === '5'">5</button>
+      <button (click)="append('6')" [class.active]="lastKey === '6'">6</button>
+      <button (click)="append('*')" [class.active]="lastKey === '*'">×</button>
+  
+      <button (click)="append('1')" [class.active]="lastKey === '1'">1</button>
+      <button (click)="append('2')" [class.active]="lastKey === '2'">2</button>
+      <button (click)="append('3')" [class.active]="lastKey === '3'">3</button>
+      <button (click)="append('-')" [class.active]="lastKey === '-'">−</button>
+  
+      <button (click)="append('0')" [class.active]="lastKey === '0'">0</button>
+      <button (click)="append('.') " [class.active]="lastKey === '.'">.</button>
+      <button (click)="calculate()" [class.active]="lastKey === 'Enter' || lastKey === '='">=</button>
+      <button (click)="append('+')" [class.active]="lastKey === '+'">+</button>
+  
+      <button class="clear-btn" (click)="clear()" [class.active]="lastKey === 'Escape' || lastKey === 'C'">C</button>
+    </div>
+  </div>
+}

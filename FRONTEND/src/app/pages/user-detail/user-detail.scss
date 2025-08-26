@@ -1,0 +1,99 @@
+/* user-detail.scss */
+// Import global variables and mixins if needed
+// @import 'path/to/global-styles'; // Assume your design pattern SCSS is imported globally
+
+.profile-header {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.profile-avatar {
+  position: relative;
+  margin: 0 auto;
+  width: fit-content;
+
+  img {
+    border: 2px solid #dee2e6;
+  }
+
+  .icon-active {
+    bottom: 10px;
+    right: 10px;
+    height: 16px;
+    width: 16px;
+    background: #00e124;
+    border: 2px solid #fff;
+  }
+}
+
+.profile-info {
+  h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+  }
+
+  .profile-role {
+    font-size: 18px;
+    color: #6c757d;
+    margin-bottom: 5px;
+  }
+
+  .lbl-date-time {
+    font-size: 14px;
+    color: #adb5bd;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  .text-danger {
+    font-size: 12px;
+    margin-top: 4px;
+    color: #da0000;
+  }
+}
+
+.input-group {
+  .btn-outline-secondary {
+    border-left: 0;
+    background: #f8f9fa;
+
+    &:hover {
+      background: #e9ecef;
+    }
+  }
+}
+
+.password-info {
+  background: #e0f7fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+
+  .lbl-info {
+    color: #00796b;
+    font-style: italic;
+  }
+}
+
+@media (max-width: 767px) {
+  .profile-header {
+    text-align: center;
+
+    .col-md-3, .col-md-9 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    .profile-info {
+      margin-top: 20px;
+    }
+
+    .btn-add {
+      margin-top: 10px;
+    }
+  }
+}

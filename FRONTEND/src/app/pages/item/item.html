@@ -1,0 +1,47 @@
+<div class="list-view-wrapper">
+  <div class="body-area">
+    <div class="body-area-header page-action-container">
+      <div class="row align-items-center m-0 w-100">
+        <div class="col-4 p-0">
+          <div class="body-header-title">Item</div>
+        </div>
+        <div class="col-8">
+          <div class="row">
+            <div class="col-2">
+              <select id="itemsPerPageSelect" class="form-select" [(ngModel)]="pageSizeInput">
+                <option value=5 selected>5</option>
+                <option value=10>10</option>
+                <option value=25>25</option>
+                <option value=50>50</option>
+                <option value=100>100</option>
+                <option value=-1>All Data</option>
+              </select>
+            </div>
+            <div class="col-7">
+              <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="searchTerm" />
+            </div>
+            <div class="col-3 d-flex justify-content-end">
+              <button class="btn-common btn-header-action btn-add" (click)="openDrawerView()">
+                <!-- <span class="icon-common icon-header-action icon-add"></span> -->
+                <span class="lbl-header-action">Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-item-list [searchTerm]="searchTerm" [pageSizeInput]="pageSizeInput" (itemSelected)="onItemSelected($event)"
+      (itemSaved)="onItemSaved()"></app-item-list>
+  </div>
+</div>
+<div class="form-view-wrapper drawer-close" #formWrapper appTeleportModal>
+  <div class="form-view-container">
+    <a (click)="closeDrawerView()" class="btn-close-drawer">
+      <span class="icon-common icon-chevron-duo"></span>
+    </a>
+    <div class="form-view-inner">
+      <app-item-add-edit [selectedItem]="selectedItem" (itemSaved)="onItemSaved()"></app-item-add-edit>
+    </div>
+  </div>
+</div>
+<div class="bg-overlay overlay-hide" appTeleportOverlay #overlayElement (click)="closeDrawerView()"></div>

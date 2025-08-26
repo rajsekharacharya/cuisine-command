@@ -1,0 +1,137 @@
+<div class="body-area">
+  <div class="body-area-header page-action-container">
+    <div class="row w-100 align-items-center">
+      <div class="col-6">
+        <div class="body-header-title title-primary">
+          {{ isEditMode ? 'Edit Restaurant' : 'Add Restaurant' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-area-content">
+    <div class="view-container">
+      <form class="form-container" [formGroup]="restaurantForm" (ngSubmit)="saveRestaurant()">
+        <div class="row">
+
+          <!-- Name -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Name:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <input type="text" class="form-control" formControlName="name" placeholder="Enter Name" />
+                @if (restaurantForm.get('name')?.invalid && restaurantForm.get('name')?.touched) {
+                <div class="text-danger">Name is required.</div>
+                }
+              </label>
+            </div>
+          </div>
+
+          <!-- Cuisine -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Cuisine:</span></span>
+                <input type="text" class="form-control" formControlName="cuisine" placeholder="Enter Cuisine" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Description:</span></span>
+                <textarea class="form-control" formControlName="description" placeholder="Enter Description"></textarea>
+              </label>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Address:</span></span>
+                <input type="text" class="form-control" formControlName="address" placeholder="Enter Address" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Contact:</span></span>
+                <input type="text" class="form-control" formControlName="contact" placeholder="Enter Contact Number" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Status:</span></span>
+                <select class="form-select" formControlName="status">
+                  <option [value]="true">Active</option>
+                  <option [value]="false">Inactive</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <!-- Logo -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Logo:</span></span>
+                <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event, 'logo')"
+                  #logoInput />
+              </label>
+              @if (logoPreviewUrl) {
+              <div class="image-preview">
+                <img [src]="logoPreviewUrl" alt="Logo preview" class="img-preview" />
+                <button type="button" class="btn btn-danger btn-sm mt-2" (click)="removeImage('logo')">Remove
+                  Logo</button>
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- Banner -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper"><span class="lbl-form">Banner:</span></span>
+                <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event, 'banner')"
+                  #bannerInput />
+              </label>
+              @if (bannerPreviewUrl) {
+              <div class="image-preview">
+                <img [src]="bannerPreviewUrl" alt="Banner preview" class="img-preview" />
+                <button type="button" class="btn btn-danger btn-sm mt-2" (click)="removeImage('banner')">Remove
+                  Banner</button>
+              </div>
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary btn-form-action"
+            [disabled]="!isEditMode && !restaurantForm.dirty" (click)="resetRestaurant()">
+            Reset
+          </button>
+          <button type="submit" class="btn btn-primary btn-form-action" [disabled]="restaurantForm.invalid || loading">
+            {{ loading ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

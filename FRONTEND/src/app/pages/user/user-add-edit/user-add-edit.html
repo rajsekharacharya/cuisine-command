@@ -1,0 +1,131 @@
+<div class="body-area">
+  <div class="body-area-header page-action-container">
+    <div class="row w-100 align-items-center">
+      <div class="col-6">
+        <div class="body-header-title title-primary">
+          {{ isProfileMode ? 'My profile' : (isEditMode ? 'Edit User' : 'Add User') }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-area-content">
+    <div class="view-container">
+      <form class="form-container" [formGroup]="userForm" (ngSubmit)="saveUser()">
+        <div class="row">
+
+          <!--Name -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Name:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <input type="text" class="form-control" formControlName="name" placeholder="Enter Name" />
+                @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
+                <div class="text-danger">Name is required.</div>
+                }
+              </label>
+            </div>
+          </div>
+
+          <!-- User Name -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">User Name:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <input type="text" class="form-control" formControlName="username" placeholder="Enter User Name" />
+                @if (userForm.get('username')?.invalid && userForm.get('username')?.touched) {
+                <div class="text-danger">User Name is required.</div>
+                }
+              </label>
+            </div>
+          </div>
+
+          <!-- Password (Only when adding) -->
+          @if (!isEditMode) {
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Password:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <input type="password" class="form-control" formControlName="password" placeholder="Enter Password" />
+                @if (userForm.get('password')?.invalid && userForm.get('password')?.touched) {
+                <div class="text-danger">Password is required.</div>
+                }
+              </label>
+            </div>
+          </div>
+          }
+
+          <!-- Mobile -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Mobile:</span>
+                </span>
+                <input type="text" class="form-control" formControlName="mobile" placeholder="Enter Mobile Number" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Email:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <input type="email" class="form-control" formControlName="email" placeholder="Enter Email" />
+                @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+                <div class="text-danger">Valid email is required.</div>
+                }
+              </label>
+            </div>
+          </div>
+
+          <!-- Role -->
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <span class="lbl-form-wrapper">
+                  <span class="lbl-form">Role:</span>
+                  <span class="text-danger">*</span>
+                </span>
+                <select class="form-select" formControlName="role">
+                  <option value="" disabled>Select Role</option>
+                  @for (role of roleList; track role.key) {
+                  <option [value]="role.value">{{ role.value }}</option>
+                  }
+                </select>
+                @if (userForm.get('role')?.invalid && userForm.get('role')?.touched) {
+                <div class="text-danger">Role is required.</div>
+                }
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary btn-form-action" [disabled]="!isEditMode && !userForm.dirty"
+            (click)="resetUser()">
+            Reset
+          </button>
+          <button type="submit" class="btn btn-primary btn-form-action" [disabled]="userForm.invalid || loading">
+            {{ loading ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,157 @@
+<div class="body-area-content">
+  <div class="table-container">
+    <table class="table-view">
+      <tr class="table-head-primary">
+        <th class="col-sl">Order Id</th>
+        <th (click)="changeSort('orderDate')" (keydown)="handleKeyDown($event)"
+          [class.sort-active]="sortField === 'orderDate'">
+          Date</th>
+        <th>Time</th>
+        <th (click)="changeSort('customer')" (keydown)="handleKeyDown($event)"
+          [class.sort-active]="sortField === 'customer'">
+          Customer</th>
+        <th (click)="changeSort('status')" (keydown)="handleKeyDown($event)"
+          [class.sort-active]="sortField === 'status'">
+          Status</th>
+        <th (click)="changeSort('orderType')" (keydown)="handleKeyDown($event)"
+          [class.sort-active]="sortField === 'orderType'">
+          Order Type</th>
+        <th (click)="changeSort('paymentMethod')" (keydown)="handleKeyDown($event)"
+          [class.sort-active]="sortField === 'paymentMethod'">
+          Payment Method</th>
+        <th>Quantity</th>
+        <th>Sub Total</th>
+        <th>Total</th>
+        <th class="col-action">Action</th>
+      </tr>
+      @if (loading) {
+      @for (row of loaderRows; track $index) {
+      <tr>
+        @for (cell of loaderCells; track $index) {
+        <td>
+          <div class="loader-mask" [class.action]="$index === loaderCells.length - 1"></div>
+        </td>
+        }
+        <td>
+          <div class="loader-mask action"></div>
+        </td>
+      </tr>
+      }
+      }
+      @else if (!loading && orders.length === 0) {
+      <tr>
+        <td colspan="5" class="text-center">
+          No records to display
+        </td>
+      </tr>
+      }
+      @else {
+      @for (order of orders; track $index) {
+      <tr>
+        <td class="col-sl">Order#{{ order.id }}</td>
+        <td>{{ order.orderDate }}</td>
+        <td>{{ order.orderTime }}</td>
+        <td>{{ order.customer }}</td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.orderType }}</td>
+        <td>{{ order.paymentMethod }}</td>
+        <td>{{ order.totalQuantity }}</td>
+        <td>{{ order.subtotal }}</td>
+        <td>{{ order.finalTotal }}</td>
+        <td class="col-action">
+          <div class="dropdown">
+            <button class="btn btn-icon btn-option" type="button" id="dropdownMenuButton{{ order.id }}"
+              data-bs-toggle="dropdown" aria-expanded="false" [disabled]="loading">
+              <span class="icon-common icon-option icon-btn-circle"></span>
+            </button>
+            <ul class="dropdown-menu" [attr.aria-labelledby]="'dropdownMenuButton' + order.id">
+              <li>
+                <a class="dropdown-item" (click)="setCategoryToToggle(order.id)" data-bs-toggle="modal"
+                  data-bs-target="#categoryToggleConfirmation" #triggerButton>
+                  <span class="icon-common icon-dropdown icon-trash"></span>
+                  <span class="lbl-action lbl-delete">Cancel Order</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      }
+      }
+    </table>
+  </div>
+
+  <div class="pagination-container">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center align-items-center">
+        <!-- First Page -->
+        <li class="page-item" [class.disabled]="currentPage === 0">
+          <a class="page-link" (click)="goToPage(0)" aria-label="First">
+            <i class="bi bi-chevron-double-left"></i>
+          </a>
+        </li>
+
+        <!-- Previous Page -->
+        <li class="page-item" [class.disabled]="currentPage === 0">
+          <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+        </li>
+
+        <!-- Page Numbers (Dynamic, e.g., limited to 3-5 visible) -->
+        <ng-container *ngFor="let page of getPageNumbers()">
+          <li class="page-item" [class.active]="currentPage === page">
+            <a class="page-link" (click)="goToPage(page)">{{ page + 1 }}</a>
+          </li>
+        </ng-container>
+
+        <!-- Total Pages Display -->
+        <li class="page-item total-pages">
+          <span class="page-link">of {{ totalPages }}</span>
+        </li>
+
+        <!-- Next Page -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+          <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </li>
+
+        <!-- Last Page -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+          <a class="page-link" (click)="goToPage(totalPages - 1)" aria-label="Last">
+            <i class="bi bi-chevron-double-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- Toggle Status Confirmation Modal -->
+<div class="modal fade modal-delete-confimation" data-bs-backdrop="static" data-bs-keyboard="false"
+  id="categoryToggleConfirmation" tabindex="-1" aria-labelledby="categoryToggleConfirmation" appTeleportModal
+  #categoryToggleConfirmation>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content overflow-hidden">
+      <div class="modal-close">
+        <button type="button" class="btn-close" (click)="closeModal('categoryToggleConfirmation')">
+          <span class="icon-common icon-cross"></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/img-delete.svg" alt="" class="img-delete-confirmation">
+        <div class="lbl-confirmation">Cancel Order?</div>
+        <div class="lbl-warning"><span>Are you sure you want to cancel the order? <br> This will
+          </span><span class="lbl-danger">change its visibility</span><span>.</span></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-common btn-confirm btn-modal-action" [disabled]="loading" (click)="toggleStatus()">
+          {{ loading ? 'Canceling...' : 'Yes, Cancel it' }}
+        </button>
+        <button class="btn-common btn-cancel btn-modal-action"
+          (click)="closeModal('categoryToggleConfirmation')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

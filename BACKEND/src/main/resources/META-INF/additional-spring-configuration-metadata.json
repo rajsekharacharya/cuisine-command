@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "application.url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.url'"
+  },
+  {
+    "name": "file.upload-dir.windows",
+    "type": "java.lang.String",
+    "description": "A description for 'file.upload-dir.windows'"
+  },
+  {
+    "name": "file.upload-dir.linux",
+    "type": "java.lang.String",
+    "description": "A description for 'file.upload-dir.linux'"
+  },
+  {
+    "name": "secret.key",
+    "type": "java.lang.String",
+    "description": "A description for 'secret.key'"
+  },
+  {
+    "name": "jwt.issuer",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.issuer'"
+  },
+  {
+    "name": "jwt.audience",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.audience'"
+  },
+  {
+    "name": "app.cors.allowed-origins",
+    "type": "java.lang.String",
+    "description": "A description for 'app.cors.allowed-origins'"
+  }
+]}

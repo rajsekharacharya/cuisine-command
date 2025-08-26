@@ -1,0 +1,49 @@
+.login-bg {
+  background: url('/images/restaurant-bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+  }
+
+  .login-card {
+    z-index: 1;
+    max-width: 400px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    animation: fadeIn 0.6s ease-out;
+  }
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+
+  @media (max-width: 480px) {
+    width: 120px;
+  }
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
