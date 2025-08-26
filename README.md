@@ -2,10 +2,7 @@
 
 ![cuisine-command Banner](https://img.shields.io/badge/Cuisine%20Command-Your%20Kitchen%20Companion-brightgreen?style=for-the-badge&logo=appveyor) 
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)  
-[![Java](https://img.shields.io/badge/Java-17+-orange?style=flat-square&logo=java)](https://www.java.com/)  
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=flat-square&logo=spring)](https://spring.io/projects/spring-boot)  
-[![Angular](https://img.shields.io/badge/Angular-19+-red?style=flat-square&logo=angular)](https://angular.io/)  
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0) [![Java](https://img.shields.io/badge/Java-17+-orange?style=flat-square&logo=java)](https://www.java.com/)  [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=flat-square&logo=spring)](https://spring.io/projects/spring-boot) [![Angular](https://img.shields.io/badge/Angular-19+-red?style=flat-square&logo=angular)](https://angular.io/)  
 
 **Cuisine Command** (Your Kitchen Companion, Anytime, Anywhere!) is a comprehensive restaurant management application designed to streamline operations for restaurants. With a primary focus on **Point of Sale (POS)**, **billing**, and **stock management**, it provides an end-to-end solution for efficient restaurant handling. The backend is built with Spring Boot for robust API services, while the frontend uses Angular for a modern, responsive user interface.
 
