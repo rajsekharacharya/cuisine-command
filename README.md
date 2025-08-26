@@ -1,6 +1,6 @@
 # cuisine-command 🍲
 
-![cuisine-command Banner](https://img.shields.io/badge/Cuisine Command-Your%20Kitchen%20Companion-brightgreen?style=for-the-badge&logo=appveyor) 
+![cuisine-command Banner](https://img.shields.io/badge/Cuisine%20Command-Your%20Kitchen%20Companion-brightgreen?style=for-the-badge&logo=appveyor) 
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)  
 [![Java](https://img.shields.io/badge/Java-17+-orange?style=flat-square&logo=java)](https://www.java.com/)  
