@@ -53,7 +53,7 @@ And much more! The app is extensible for additional modules like reporting, cust
 
 1. **Clone the Repository** 🖥️  
    ```
-   git clone https://github.com/yourusername/cuisine-command.git
+   git clone https://github.com/rajsekharacharya/cuisine-command
    cd cuisine-command
    ```
 
@@ -143,7 +143,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 ## 📧 Contact
 - **Author**: Rajsekhar Acharya
-- **Email**: rajsekhar.acharya@example.com (placeholder)
-- **GitHub**: [https://github.com/yourusername/cuisine-command](https://github.com/yourusername/cuisine-command)
+- **Email**: rajsekhar.acharya@gmail.com (placeholder)
+- **GitHub**: [https://github.com/rajsekharacharya/cuisine-command](https://github.com/rajsekharacharya/cuisine-command)
 
 ⭐ Star the repo if you find it useful!
