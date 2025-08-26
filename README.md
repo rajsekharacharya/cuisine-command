@@ -53,7 +53,7 @@ And much more! The app is extensible for additional modules like reporting, cust
 
 1. **Clone the Repository** 🖥️  
    ```
-   git clone https://github.com/rajsekharacharya/cuisine-command
+   git clone https://github.com/rajsekharacharya/cuisine-command.git
    cd cuisine-command
    ```
 
