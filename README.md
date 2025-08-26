@@ -1,6 +1,7 @@
 # cuisine-command 🍲
 
-![cuisine-command Banner](https://img.shields.io/badge/Cuisine Command-Your%20Kitchen%20Companion-brightgreen?style=for-the-badge&logo=appveyor)  
+![cuisine-command Banner](https://img.shields.io/badge/Cuisine Command-Your%20Kitchen%20Companion-brightgreen?style=for-the-badge&logo=appveyor) 
+
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)  
 [![Java](https://img.shields.io/badge/Java-17+-orange?style=flat-square&logo=java)](https://www.java.com/)  
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green?style=flat-square&logo=spring)](https://spring.io/projects/spring-boot)  
@@ -54,7 +55,6 @@ And much more! The app is extensible for additional modules like reporting, cust
 1. **Clone the Repository** 🖥️  
    ```
    git clone https://github.com/rajsekharacharya/cuisine-command.git
-   cd cuisine-command
    ```
 
 2. **Backend Setup** 🔙  
@@ -108,17 +108,17 @@ Here are some glimpses of the application. (Replace placeholders with actual ima
   ![Billing Screenshot](screenshots/billing.png)  
   *Automated invoice generation with payment options.*
 
-- **Stock Dashboard**  
-  ![Stock Dashboard Screenshot](screenshots/stock-dashboard.png)  
-  *Real-time inventory tracking and alerts.*
+- **Dashboard**  
+  ![Dashboard Screenshot](screenshots/dashboard.png)  
+  *Real-time Dashboard.*
 
-- **Item Dashboard**  
-  ![Item Dashboard Screenshot](screenshots/item-dashboard.png)  
+- **Item Master**  
+  ![Item Master Screenshot](screenshots/item.png)  
   *Manage menu items, prices, and categories.*
 
-- **Admin Panel**  
-  ![Admin Panel Screenshot](screenshots/admin-panel.png)  
-  *User management and system settings.*
+- **Order Panel**  
+  ![Admin Panel Screenshot](screenshots/order.png)  
+  *Order management.*
 
 ---
 
